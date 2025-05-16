@@ -35,7 +35,7 @@ export default function HomePage() {
           {/* Background Text Layer 1: AI Question Generation */}
           <ParallaxBannerLayer speed={-25}>
             <div className="absolute top-[28%] left-[10%] md:left-[15%]">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl text-white/20 font-extrabold transform -rotate-12">
+              <h2 className="text-3xl animate-bounce sm:text-4xl md:text-5xl text-white/20 font-extrabold transform -rotate-12">
                 AI Question Generation
               </h2>
             </div>
@@ -44,14 +44,14 @@ export default function HomePage() {
           {/* Background Text Layer 2: Resume-Specific Scenarios */}
           <ParallaxBannerLayer speed={-18}>
             <div className="absolute bottom-[20%] md:bottom-[25%] right-[5%] md:right-[10%]">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl text-white/20 font-extrabold transform rotate-6">
+              <h2 className="text-3xl animate-bounce sm:text-4xl md:text-5xl text-white/20 font-extrabold transform rotate-6">
                 Resume-Specific Scenarios
               </h2>
             </div>
           </ParallaxBannerLayer>
 
           {/* Main Hero Content Layer (Kept from original) */}
-          <ParallaxBannerLayer speed={-10}>
+          <ParallaxBannerLayer speed={-10} className="z-10">
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
               <motion.h1
                 initial={{ opacity: 0, y: -30 }}
@@ -78,10 +78,9 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                // className='cursor-pointer'
               >
                 <Link href="/get-started" passHref>
-                  <Button size="lg" className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transform hover:scale-105 transition-transform">
+                  <Button size="lg" className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
                     Get Started Now <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
@@ -92,7 +91,7 @@ export default function HomePage() {
           {/* Foreground Text Layer 1: Instant Feedback */}
           <ParallaxBannerLayer speed={5}>
             <div className="absolute bottom-[25%] md:bottom-[30%] left-[5%] md:left-[10%]">
-              <h3 className="text-3xl sm:text-4xl text-sky-300/50 font-bold transform rotate-8">
+              <h3 className="text-3xl animate-pulse sm:text-4xl text-sky-300/50 font-bold transform rotate-8">
                 Instant Feedback
               </h3>
             </div>
@@ -101,7 +100,7 @@ export default function HomePage() {
           {/* Foreground Text Layer 2: Build Confidence */}
           <ParallaxBannerLayer speed={12}>
             <div className="absolute top-[25%] right-[10%] md:right-[15%]">
-              <h3 className="text-3xl sm:text-4xl text-sky-300/50 font-bold transform -rotate-6">
+              <h3 className="text-3xl animate-pulse sm:text-4xl text-sky-300/50 font-bold transform -rotate-6">
                 Build Confidence
               </h3>
             </div>
@@ -161,10 +160,24 @@ export default function HomePage() {
               viewport={{ once: false }}
               transition={{ duration: 1.2 }}
             >
-                <h2 className="text-3xl font-bold mb-6">Ready to Nail Your Next Interview?</h2>
-                <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
+                <motion.h2 
+                  initial={{ opacity: 0, y:20 }}
+                  whileInView={{ opacity: 1, y:0 }}
+                  viewport={{ once: false }}
+                  transition={{ duration: 1.2 }}
+                  className="text-3xl font-bold mb-6"
+                >
+                  Ready to Nail Your Next Interview?
+                </motion.h2>
+                <motion.p
+                  className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto"
+                  initial={{ opacity: 0, y:30 }}
+                  whileInView={{ opacity: 1, y:0 }}
+                  viewport={{ once: false }}
+                  transition={{ duration: 1.2 }}
+                >
                     Stop guessing what interviewers will ask. Start practicing with purpose.
-                </p>
+                </motion.p>
                 <Link href="/get-started" passHref>
                     <Button size="lg" variant="default" className="text-lg px-10 py-7 rounded-full shadow-lg transform hover:scale-105 transition-transform">
                         Begin Your Transformation <ArrowRight className="ml-3 h-6 w-6" />
