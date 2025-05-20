@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea'; // For manual entry
-import { Toaster, toast } from 'sonner'
+import { toast } from 'sonner';
 import { Loader2, UploadCloud, PlusCircle, XCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 
@@ -36,9 +36,8 @@ interface Project {
 interface ManualResumeData {
   fullName: string;
   email: string;
-  phone?: string;
   summary: string;
-  skills: string[]; // Or string for comma-separated
+  skills: string[]; // comma-separated string
   experiences: Experience[];
   educations: Education[];
   projects: Project[];
@@ -52,6 +51,8 @@ export default function GetStartedPage() {
   const [manualData, setManualData] = useState<ManualResumeData>({
     fullName: '', email: '', summary: '', skills: [], experiences: [], educations: [], projects: []
   }); // Basic structure
+
+const [skillsInput, setSkillsInput] = useState<string>('');
 
   // --- Helper for unique IDs ---
   const generateId = () => Date.now().toString() + Math.random().toString(36).substring(2, 9);
@@ -110,10 +111,22 @@ export default function GetStartedPage() {
     }));
   };
 
-  const handleSkillsChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const skillsArray = event.target.value.split(',').map(s => s.trim()).filter(s => s !== "");
-    setManualData(prev => ({ ...prev, skills: skillsArray }));
+  // Update text input as user types
+  const handleSkillsInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSkillsInput(event.target.value);
   };
+
+  // Convert to array on blur or form submission
+  // const handleSkillsInputBlur = () => {
+  //   const skillsArray = skillsInput.split(',').map(s => s.trim()).filter(Boolean);
+  //   setManualData(prev => ({ ...prev, skills: skillsArray }));
+  //   // console.log("skillsArray", skillsArray)
+  // };
+
+  // const handleSkillsChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const skillsArray = event.target.value.split(',').map(s => s.trim()).filter(s => s !== "");
+  //   setManualData(prev => ({ ...prev, skills: skillsArray }));
+  // };
 
 
   const handleSubmitResume = async () => {
@@ -126,10 +139,11 @@ export default function GetStartedPage() {
     formData.append('resume', resumeFile);
 
     try {
-      const response = await fetch('/api/resume/process', {
+      const response = await fetch('/api/process-resume', {
         method: 'POST',
         body: formData,
       });
+      console.log('Response:', response);
       const result = await response.json();
 
       if (!response.ok) {
@@ -138,12 +152,13 @@ export default function GetStartedPage() {
       
       // Store result.resumeData (parsed skills, etc.) in state/context or pass via router
       // For now, let's assume it returns a sessionId for the interview
-      localStorage.setItem('resumeAnalysis', JSON.stringify(result.analysis)); // Store analysis
+      localStorage.setItem('resumeAnalysis', JSON.stringify({resumeAnalysis: result.analysis, sessionId: result.sessionId})); // Store analysis adn sessionID
       router.push(`/interview/new`); // Or /interview/${result.sessionId}
       toast.success("Resume Processed!", {description: "Your interview is being prepared." });
 
     } catch (error: any) {
       toast.error("Error", {description: error.message });
+      console.error('Error processing resume:', error);
     } finally {
       setIsLoading(false);
     }
@@ -201,27 +216,37 @@ export default function GetStartedPage() {
 
   
 
-  const handleSubmitManualData = async () => {
+  const handleSubmitManualData = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const skillsArray = skillsInput.split(',').map(s => s.trim()).filter(Boolean);
+    const dataToSubmit = {
+      ...manualData,
+      skills: skillsArray
+    };
+  
+    setManualData(dataToSubmit);
+    // console.log("skillsArray", skillsArray)
     setIsLoading(true);
+    console.log("The submitted Data: ", dataToSubmit)
     // Basic validation
-    if (!manualData.fullName || !manualData.email || !manualData.summary || manualData.skills.length === 0) {
+    if (!manualData.fullName || !manualData.email || !manualData.summary || dataToSubmit.skills.length === 0) {
         toast.error("Missing Information", {description: "Please fill in all required fields." });
         setIsLoading(false);
         return;
     }
 
     try {
-      const response = await fetch('/api/resume/process', {
+      const response = await fetch('/api/process-resume', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ manualData }),
+        body: JSON.stringify({ dataToSubmit }),
       });
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(result.error || 'Failed to process data');
       }
-      localStorage.setItem('resumeAnalysis', JSON.stringify(result.analysis)); // Store analysis
+      localStorage.setItem('resumeAnalysis', JSON.stringify({resumeAnalysis: result.analysis, sessionId: result.sessionId})); // Store analysis and sessionID
       router.push(`/interview/new`);
       toast.success("Data Processed!", { description: "Your interview is being prepared." });
 
@@ -258,8 +283,8 @@ export default function GetStartedPage() {
             <CardContent className="p-6 sm:p-8">
               <Tabs defaultValue="upload" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 h-16 gap-2 p-1 bg-muted rounded-lg">
-                  <TabsTrigger value="upload" className="py-2.5 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-md">Upload Resume</TabsTrigger>
-                  <TabsTrigger value="manual" className="py-2.5 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-md">Enter Manually</TabsTrigger>
+                  <TabsTrigger value="upload" className="py-2.5 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-md cursor-pointer  transition-all duration-150 active:scale-x-95">Upload Resume</TabsTrigger>
+                  <TabsTrigger value="manual" className="py-2.5 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-md cursor-pointer transition-all duration-150 active:scale-95">Enter Manually</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="upload" className="mt-6 sm:mt-8">
@@ -311,7 +336,7 @@ export default function GetStartedPage() {
                     </div>
                     <div>
                       <Label htmlFor="skills" className="block text-sm font-medium mb-1.5 text-card-foreground">Skills (comma-separated)</Label>
-                      <Input id="skills" name="skills" value={manualData.skills.join(', ')} onChange={handleSkillsChange} required placeholder="e.g., React, Node.js, Project Management" />
+                      <Input id="skills" name="skills" value={skillsInput} onChange={handleSkillsInputChange} required placeholder="e.g., React, Node.js, Project Management" />
                     </div>
                     
                     {/* --- Experience Section --- */}
@@ -340,9 +365,10 @@ export default function GetStartedPage() {
                                 <Input placeholder="Job Title" aria-label="Job Title" value={exp.jobTitle} onChange={e => handleExperienceChange(exp.id, 'jobTitle', e.target.value)} className="text-base" />
                                 <Input placeholder="Company" aria-label="Company" value={exp.company} onChange={e => handleExperienceChange(exp.id, 'company', e.target.value)} className="text-base" />
                                 <Input placeholder="Start Date (MM YYYY)" aria-label="Start Date" value={exp.startDate} onChange={e => handleExperienceChange(exp.id, 'startDate', e.target.value)} className="text-base" />
-                                <Input placeholder="End Date (MM YYYY)" aria-label="End Date" value={exp.endDate} onChange={e => handleExperienceChange(exp.id, 'endDate', e.target.value)} className="text-base" />
+                                {exp.endDate !== new Date().toLocaleDateString('en-US', { month: '2-digit', year: 'numeric' }) &&
+                                  <Input placeholder="End Date (MM YYYY)" aria-label="End Date" value={exp.endDate} onChange={e => handleExperienceChange(exp.id, 'endDate', e.target.value)} className="text-base" />}
                                 <div className="flex gap-3 items-center">
-                                  <Switch id="currentJob" checked={exp.endDate === ''} onCheckedChange={(checked) => handleExperienceChange(exp.id, 'endDate', checked ? '' : exp.endDate)} />
+                                  <Switch className="cursor-pointer" id="currentJob" defaultChecked={false} checked={exp.endDate === new Date().toLocaleDateString('en-US', { month: '2-digit', year: 'numeric' })} onCheckedChange={(checked) => handleExperienceChange(exp.id, 'endDate', checked ? new Date().toLocaleDateString('en-US', { month: '2-digit', year: 'numeric' }) : '')} />
                                   <Label htmlFor="currentJob" className="text-sm font-medium text-card-foreground">I currently work here</Label>
                                 </div>
                                 {/* Consider adding Textarea for responsibilities and date pickers */}
@@ -375,9 +401,9 @@ export default function GetStartedPage() {
                                 </Button>
                                 <Input placeholder="Degree or Certificate Name" aria-label="Degree or Certificate Name" value={edu.degree} onChange={e => handleEducationChange(edu.id, 'degree', e.target.value)} className="text-base" />
                                 <Input placeholder="Institution or Issuing Body" aria-label="Institution or Issuing Body" value={edu.institution} onChange={e => handleEducationChange(edu.id, 'institution', e.target.value)} className="text-base" />
-                                <Input placeholder="Year of Completion / Expiry" aria-label="Year of Completion or Expiry" value={edu.year} onChange={e => handleEducationChange(edu.id, 'year', e.target.value)} className="text-base" />
+                                {edu.year !== "still attending" && <Input placeholder="Year of Completion / Expiry" aria-label="Year of Completion or Expiry" value={edu.year} onChange={e => handleEducationChange(edu.id, 'year', e.target.value)} className="text-base" />}
                                 <div className="flex gap-3 items-center">
-                                  <Switch id="currentJob" checked={edu.year === ''} onCheckedChange={(checked) => handleEducationChange(edu.id, 'year', checked ? '' : edu.year)} />
+                                  <Switch id="currentJob" checked={edu.year === 'still attending'} onCheckedChange={(checked) => handleEducationChange(edu.id, 'year', checked ? 'still attending' : "")} />
                                   <Label htmlFor="currentJob" className="text-sm font-medium text-card-foreground">I currently study here</Label>
                                 </div>
                             </div>
