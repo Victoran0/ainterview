@@ -22,6 +22,7 @@ const resumeExtractionPromptTemplate = new PromptTemplate({
   If some information is missing, use sensible defaults or omit the field where appropriate (e.g., empty array for skills if none are found).
   Format your output according to the provided schema.
   Your output must be a JSON object that matches the provided schema in Format Instructions.
+  No 3 backticks with json tags, just the JSON object, i.e. your output must start and end with a curly brace.
 
   Resume Text:
   {resume_text}
@@ -131,9 +132,9 @@ export async function POST(req: NextRequest) {
 
     const input = await resumeExtractionPromptTemplate.format({ resume_text: resumeText });
     const response = await llm.invoke(input);
-    // console.log('LLM response type:', typeof response.content);
+    console.log('LLM response!: ', response.content);
 
-    const parsedAnalysis: ResumeAnalysis = await resumeParser.parse(response.content);
+    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content);
     
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
     
