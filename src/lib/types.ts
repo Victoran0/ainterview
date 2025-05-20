@@ -86,7 +86,7 @@ export const OverallFeedbackSchema = z.object({
     improvementSuggestions: z.array(z.object({
         area: z.string().describe("Specific area for improvement"),
         suggestions: z.array(z.string()).describe("Actionable suggestions"),
-        resources: z.array(z.object({ name: z.string(), url: z.string().url() })).optional().describe("Learning resources")
+        resources: z.array(z.object({ name: z.string(), url: z.string().optional() })).optional().describe("Learning resources")
     })).describe("Detailed suggestions for improvement."),
     studyPlanSummary: z.string().describe("A concise summary of a personalized study plan."),
 });
