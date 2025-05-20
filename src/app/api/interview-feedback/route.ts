@@ -1,12 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { JsonOutputFunctionsParser } from "langchain/output_parsers";
 import { JsonOutputParser } from "@langchain/core/output_parsers";
 import { InterviewSession, FullReportSchema, FullReport, Question } from '@/lib/types';
+import { NextRequest, NextResponse } from 'next/server';
+import zodToJsonSchema from "zod-to-json-schema";
 // LangGraph imports would go here if used:
 // import { StateGraph, END } from "@langchain/langgraph";
 // import { RunnableLambda, RunnablePassthrough } from "@langchain/core/runnables";
+
+const FullReportJsonSchema = zodToJsonSchema(FullReportSchema, "FullReport");
 
 const feedbackPromptText = `
 You are an AI Interview Performance Analyzer.
@@ -55,34 +58,35 @@ function formatQuestionsAndAnswers(session: InterviewSession): string {
     return qaString;
 }
 
+const llm = new ChatGoogleGenerativeAI({
+    // openAIApiKey: process.env.OPENAI_API_KEY,
+    temperature: 0.3,
+    model: "gemini-2.0-flash", 
+});
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+const functionCallingModel = llm.bind({
+    tools: [
+        {   
+            type: "function",
+            function: {
+                name: "generate_interview_full_report",
+                description: "Generates a complete interview feedback report including individual answer evaluations and overall feedback.",
+                parameters: FullReportJsonSchema.definitions?.FullReport || FullReportJsonSchema,
+            },
+        },
+    ],
+    tool_choice: { type: "function", function: { name: "generate_interview_full_report" }},
+});
 
-    const sessionData: InterviewSession = req.body;
+
+export async function POST(req: NextRequest, res: NextResponse) {
+
+    const sessionData: InterviewSession = await req.json();
 
     if (!sessionData || !sessionData.answers || !sessionData.interviewStructure || !sessionData.resumeAnalysis) {
-        return res.status(400).json({ error: 'Incomplete interview session data.' });
+        return NextResponse.json({ error: 'Incomplete interview session data.' }, { status: 400 });
     }
 
-    const llm = new ChatGoogleGenerativeAI({
-        // openAIApiKey: process.env.OPENAI_API_KEY,
-        temperature: 0.3,
-        model: "gemini-2.0-flash", 
-    });
-
-    const functionCallingModel = llm.bind({
-        tools: [
-            {   
-                type: "function",
-                function: {
-                    name: "generate_interview_full_report",
-                    description: "Generates a complete interview feedback report including individual answer evaluations and overall feedback.",
-                    parameters: FullReportSchema,
-                },
-            },
-        ],
-        tool_choice: { type: "function", function: { name: "generate_interview_full_report" }},
-    });
     // const outputParser = new JsonOutputFunctionsParser();
     const outputParser = new JsonOutputParser<FullReport>(); // Parses the tool call arguments
 
@@ -117,10 +121,10 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
 
         // TODO: Store fullReport in DB
-        return res.status(200).json(fullReport);
+        return NextResponse.json(fullReport, { status: 200 });
 
     } catch (error: any) {
         console.error('Feedback generation error:', error);
-        return res.status(500).json({ error: 'Failed to generate feedback.', details: error.message });
+        return NextResponse.json({ error: 'Failed to generate feedback.', details: error.message }, { status: 500 });
     }
 }
