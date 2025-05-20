@@ -5,7 +5,6 @@ import { z } from 'zod';
 export const ResumeAnalysisSchema = z.object({
   fullName: z.string().optional().describe("Full name of the candidate"),
   email: z.string().email().optional().describe("Email address"),
-  phone: z.string().optional().describe("Phone number"),
   summary: z.string().describe("A brief summary or objective from the resume."),
   skills: z.array(z.string()).describe("List of key skills (technical, soft skills, tools, programming languages, etc.)."),
   experiences: z.array(
@@ -15,14 +14,14 @@ export const ResumeAnalysisSchema = z.object({
       duration: z.string().optional().describe("Employment duration (e.g., 'Jan 2020 - Present', '3 years')"),
       responsibilities: z.array(z.string()).describe("Key responsibilities and achievements"),
     })
-  ).describe("Professional experiences."),
+  ).optional().describe("Professional experiences."),
   education: z.array(
     z.object({
       degree: z.string().describe("Degree obtained (e.g., 'B.S. Computer Science')"),
       institution: z.string().describe("Name of the institution"),
       graduationYear: z.string().optional().describe("Year of graduation or expected graduation"),
     })
-  ).describe("Educational background."),
+  ).optional().describe("Educational background."),
   projects: z.array(
     z.object({
         name: z.string().describe("Project name"),
