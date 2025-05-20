@@ -33,7 +33,7 @@ export type ResumeAnalysis = z.infer<typeof ResumeAnalysisSchema>;
 
 // Schemas for Questions and Interview Structure
 export const QuestionSchema = z.object({
-    id: z.string().uuid().describe("Unique ID for the question"),
+    id: z.string().describe("Unique ID for the question"),
     type: z.enum(['technical', 'behavioral', 'problem-solving', 'theoretical', 'aptitude-mcq', 'background']).describe("Type of the question"),
     text: z.string().describe("The question text"),
     options: z.array(z.string()).optional().describe("Multiple choice options, if type is aptitude-mcq"),
@@ -47,7 +47,7 @@ export type Question = z.infer<typeof QuestionSchema>;
 export const InterviewSectionSchema = z.object({
     name: z.string().describe("Name of the interview section"),
     type: z.enum(['technical', 'behavioral', 'problem-solving', 'theoretical', 'aptitude-mcq', 'background', 'mixed']).describe("Primary type of questions in this section"),
-    timeLimitMinutes: z.number().int().positive().describe("Time limit in minutes for this section"),
+    timeLimitMinutes: z.number().int().min(1).describe("Time limit in minutes for this section"),
     questions: z.array(QuestionSchema).describe("List of questions for this section")
 });
 export type InterviewSection = z.infer<typeof InterviewSectionSchema>;
