@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -137,7 +137,7 @@ const [skillsInput, setSkillsInput] = useState<string>('');
     setIsLoading(true);
     const formData = new FormData();
     formData.append('resume', resumeFile);
-
+    toast.message("Processing Resume...", {description: "Please wait while we process your resume." });
     try {
       const response = await fetch('/api/process-resume', {
         method: 'POST',
@@ -234,7 +234,7 @@ const [skillsInput, setSkillsInput] = useState<string>('');
         setIsLoading(false);
         return;
     }
-
+    toast.message("Processing Data...", {description: "Please wait while we process your information." });
     try {
       const response = await fetch('/api/process-resume', {
         method: 'POST',
@@ -301,7 +301,21 @@ const [skillsInput, setSkillsInput] = useState<string>('');
                             <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-2">
                                 <UploadCloud className="w-8 h-8 sm:w-10 sm:h-10 mb-3 text-muted-foreground" />
                                 <p className="mb-2 text-xs sm:text-sm text-muted-foreground">
-                                  <span className="font-semibold text-primary">Click to upload</span> or drag and drop
+                                  <span className="font-semibold text-primary">
+                                    Click to{" "}
+                                    <AnimatePresence mode="wait">
+                                      <motion.span
+                                        key={resumeFile ? "update" : "upload"}
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -5 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="inline-block"
+                                      >
+                                        {resumeFile ? "update" : "upload"}
+                                      </motion.span>
+                                    </AnimatePresence>
+                                  </span> or drag and drop
                                 </p>
                                 <p className="text-xs text-muted-foreground/80">PDF, DOC, DOCX (MAX. 5MB)</p>
                             </div>
@@ -313,7 +327,7 @@ const [skillsInput, setSkillsInput] = useState<string>('');
                             Selected file: <span className="font-semibold text-primary">{resumeFile.name}</span>
                         </div>
                     )}
-                    <Button onClick={handleSubmitResume} disabled={isLoading || !resumeFile} className="w-full text-base sm:text-lg py-3 sm:py-3.5">
+                    <Button onClick={handleSubmitResume} disabled={isLoading || !resumeFile} className="w-full text-base sm:text-lg py-3 sm:py-3.5 cursor-pointer">
                       {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : 'Process Resume & Start'}
                     </Button>
                   </div>
