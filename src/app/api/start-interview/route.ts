@@ -27,7 +27,7 @@ Education: {education_highlights}
 Projects: {projects_highlights}
 
 For each question, specify its type (technical, behavioral, problem-solving, theoretical, aptitude-mcq, background), text, options (for MCQ), correctAnswerText (for MCQ, or ideal answer keywords for others), topic, and difficulty (easy, medium, hard).
-Structure the entire output as a single JSON object matching the InterviewStructureSchema provided by the function call.
+Structure the entire output as a single JSON object matching the InterviewStructureSchema provided by the tool call.
 Ensure questions are diverse and strongly aligned with the candidate's profile.
 Each section should have a name and a suggested time limit in minutes (e.g., Technical: 20 mins, Behavioral: 15 mins).
 `;
