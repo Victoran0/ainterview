@@ -11,33 +11,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner";
 import {motion} from 'motion/react';
 import { InterviewSession, Question, InterviewSection, ResumeAnalysis } from '@/lib/types';
-import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, Loader2, TimerIcon } from 'lucide-react';
-
-// Simple Timer Component
-const SectionTimer = ({ durationMinutes, onTimeUp }: { durationMinutes: number, onTimeUp: () => void }) => {
-    const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
-
-    useEffect(() => {
-        if (timeLeft <= 0) {
-            onTimeUp();
-            return;
-        }
-        const intervalId = setInterval(() => {
-            setTimeLeft(prevTime => prevTime - 1);
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, [timeLeft, onTimeUp]);
-
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-
-    return (
-        <div className={`text-lg font-semibold p-2 rounded-md flex items-center ${timeLeft < 60 ? 'text-red-500 animate-pulse' : 'text-foreground'}`}>
-            <TimerIcon className="mr-2 h-5 w-5" />
-            Time Left: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-        </div>
-    );
-};
+import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import SectionTimer from './SectionTimer';
 
 
 export default function InterviewPage() {
@@ -362,18 +337,18 @@ export default function InterviewPage() {
                         </motion.div>
                     </CardContent>
                     <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6">
-                        <Button variant="outline" onClick={handlePreviousQuestion} disabled={isSubmitting || (interviewSession.currentSectionIndex === 0 && currentQuestionInSectionIndex === 0)}>
+                        <Button className='cursor-pointer active:scale-95 disabled:cursor-not-allowed' variant="outline" onClick={handlePreviousQuestion} disabled={isSubmitting || (interviewSession.currentSectionIndex === 0 && currentQuestionInSectionIndex === 0)}>
                             <ChevronLeft className="mr-2 h-4 w-4" /> Previous
                         </Button>
                         
                         {interviewSession.currentSectionIndex === interviewSession.interviewStructure.sections.length - 1 &&
                          currentQuestionInSectionIndex === currentSection.questions.length - 1 ? (
-                            <Button onClick={() => handleFinishInterview()} disabled={isSubmitting} className="bg-green-600 hover:bg-green-700">
+                            <Button onClick={() => handleFinishInterview()} disabled={isSubmitting} className="bg-green-600 active:scale-95 hover:bg-green-700 cursor-pointer disabled:cursor-not-allowed">
                                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
                                 Finish Interview
                             </Button>
                         ) : (
-                            <Button onClick={handleNextQuestion} disabled={isSubmitting}>
+                            <Button className='cursor-pointer disabled:cursor-not-allowed active:scale-95' onClick={handleNextQuestion} disabled={isSubmitting}>
                                 Next <ChevronRight className="ml-2 h-4 w-4" />
                             </Button>
                         )}
