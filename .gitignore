@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# database
+/prisma/db.sqlite
+/prisma/db.sqlite-journal
+db.sqlite
+
 # next.js
 /.next/
 /out/
@@ -43,3 +48,6 @@ next-env.d.ts
 # test files
 test.tsx
 *.txt
+
+# idea files
+.idea

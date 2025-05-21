@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { ClerkProvider } from '@clerk/nextjs';
+import { TRPCReactProvider } from "@/trpc/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,15 +28,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      > 
-        <Nav />
-        {children}
-        <Footer />
-        <Toaster position="bottom-right" expand={false} richColors />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <TRPCReactProvider>
+            <Nav />
+            {children}
+            <Footer />
+            <Toaster position="bottom-right" expand={false} richColors />
+          </TRPCReactProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
