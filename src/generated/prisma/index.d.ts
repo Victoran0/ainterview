@@ -1293,22 +1293,28 @@ export namespace Prisma {
 
   export type UserMinAggregateOutputType = {
     id: string | null
-    email: string | null
-    name: string | null
+    emailAddress: string | null
+    firstName: string | null
+    lastName: string | null
+    imageUrl: string | null
     resumeAnalysisId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
-    email: string | null
-    name: string | null
+    emailAddress: string | null
+    firstName: string | null
+    lastName: string | null
+    imageUrl: string | null
     resumeAnalysisId: string | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
-    email: number
-    name: number
+    emailAddress: number
+    firstName: number
+    lastName: number
+    imageUrl: number
     resumeAnalysisId: number
     _all: number
   }
@@ -1316,22 +1322,28 @@ export namespace Prisma {
 
   export type UserMinAggregateInputType = {
     id?: true
-    email?: true
-    name?: true
+    emailAddress?: true
+    firstName?: true
+    lastName?: true
+    imageUrl?: true
     resumeAnalysisId?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
-    email?: true
-    name?: true
+    emailAddress?: true
+    firstName?: true
+    lastName?: true
+    imageUrl?: true
     resumeAnalysisId?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
-    email?: true
-    name?: true
+    emailAddress?: true
+    firstName?: true
+    lastName?: true
+    imageUrl?: true
     resumeAnalysisId?: true
     _all?: true
   }
@@ -1410,8 +1422,10 @@ export namespace Prisma {
 
   export type UserGroupByOutputType = {
     id: string
-    email: string
-    name: string | null
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl: string | null
     resumeAnalysisId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -1434,36 +1448,44 @@ export namespace Prisma {
 
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
-    name?: boolean
+    emailAddress?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    imageUrl?: boolean
     resumeAnalysisId?: boolean
     resumeAnalysis?: boolean | User$resumeAnalysisArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
-    name?: boolean
+    emailAddress?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    imageUrl?: boolean
     resumeAnalysisId?: boolean
     resumeAnalysis?: boolean | User$resumeAnalysisArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
-    name?: boolean
+    emailAddress?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    imageUrl?: boolean
     resumeAnalysisId?: boolean
     resumeAnalysis?: boolean | User$resumeAnalysisArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
-    email?: boolean
-    name?: boolean
+    emailAddress?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    imageUrl?: boolean
     resumeAnalysisId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "resumeAnalysisId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "emailAddress" | "firstName" | "lastName" | "imageUrl" | "resumeAnalysisId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     resumeAnalysis?: boolean | User$resumeAnalysisArgs<ExtArgs>
   }
@@ -1481,8 +1503,10 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      email: string
-      name: string | null
+      emailAddress: string
+      firstName: string
+      lastName: string
+      imageUrl: string | null
       resumeAnalysisId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1909,8 +1933,10 @@ export namespace Prisma {
    */
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'String'>
-    readonly email: FieldRef<"User", 'String'>
-    readonly name: FieldRef<"User", 'String'>
+    readonly emailAddress: FieldRef<"User", 'String'>
+    readonly firstName: FieldRef<"User", 'String'>
+    readonly lastName: FieldRef<"User", 'String'>
+    readonly imageUrl: FieldRef<"User", 'String'>
     readonly resumeAnalysisId: FieldRef<"User", 'String'>
   }
     
@@ -6663,8 +6689,10 @@ export namespace Prisma {
 
   export const UserScalarFieldEnum: {
     id: 'id',
-    email: 'email',
-    name: 'name',
+    emailAddress: 'emailAddress',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    imageUrl: 'imageUrl',
     resumeAnalysisId: 'resumeAnalysisId'
   };
 
@@ -6793,35 +6821,43 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
-    email?: StringFilter<"User"> | string
-    name?: StringNullableFilter<"User"> | string | null
+    emailAddress?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
+    imageUrl?: StringNullableFilter<"User"> | string | null
     resumeAnalysisId?: StringNullableFilter<"User"> | string | null
     resumeAnalysis?: XOR<ResumeAnalysisNullableScalarRelationFilter, ResumeAnalysisWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    email?: SortOrder
-    name?: SortOrderInput | SortOrder
+    emailAddress?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
     resumeAnalysisId?: SortOrderInput | SortOrder
     resumeAnalysis?: ResumeAnalysisOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    email?: string
+    emailAddress?: string
     resumeAnalysisId?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    name?: StringNullableFilter<"User"> | string | null
+    firstName?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
+    imageUrl?: StringNullableFilter<"User"> | string | null
     resumeAnalysis?: XOR<ResumeAnalysisNullableScalarRelationFilter, ResumeAnalysisWhereInput> | null
-  }, "id" | "email" | "resumeAnalysisId">
+  }, "id" | "emailAddress" | "resumeAnalysisId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
-    email?: SortOrder
-    name?: SortOrderInput | SortOrder
+    emailAddress?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
     resumeAnalysisId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -6833,8 +6869,10 @@ export namespace Prisma {
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
-    email?: StringWithAggregatesFilter<"User"> | string
-    name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    emailAddress?: StringWithAggregatesFilter<"User"> | string
+    firstName?: StringWithAggregatesFilter<"User"> | string
+    lastName?: StringWithAggregatesFilter<"User"> | string
+    imageUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     resumeAnalysisId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
@@ -7064,49 +7102,63 @@ export namespace Prisma {
 
   export type UserCreateInput = {
     id?: string
-    email: string
-    name?: string | null
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
     resumeAnalysis?: ResumeAnalysisCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: string
-    email: string
-    name?: string | null
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
     resumeAnalysisId?: string | null
   }
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumeAnalysis?: ResumeAnalysisUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumeAnalysisId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateManyInput = {
     id?: string
-    email: string
-    name?: string | null
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
     resumeAnalysisId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     resumeAnalysisId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7382,22 +7434,28 @@ export namespace Prisma {
 
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
-    name?: SortOrder
+    emailAddress?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    imageUrl?: SortOrder
     resumeAnalysisId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
-    name?: SortOrder
+    emailAddress?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    imageUrl?: SortOrder
     resumeAnalysisId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
-    name?: SortOrder
+    emailAddress?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    imageUrl?: SortOrder
     resumeAnalysisId?: SortOrder
   }
 
@@ -8084,14 +8142,18 @@ export namespace Prisma {
 
   export type UserCreateWithoutResumeAnalysisInput = {
     id?: string
-    email: string
-    name?: string | null
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
   }
 
   export type UserUncheckedCreateWithoutResumeAnalysisInput = {
     id?: string
-    email: string
-    name?: string | null
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
   }
 
   export type UserCreateOrConnectWithoutResumeAnalysisInput = {
@@ -8193,14 +8255,18 @@ export namespace Prisma {
 
   export type UserUpdateWithoutResumeAnalysisInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateWithoutResumeAnalysisInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ResumeAnalysisCreateWithoutExperiencesInput = {

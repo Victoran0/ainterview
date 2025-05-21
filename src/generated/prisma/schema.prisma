@@ -16,8 +16,10 @@ datasource db {
 
 model User {
   id               String          @id @default(uuid())
-  email            String          @unique
-  name             String?
+  emailAddress     String          @unique
+  firstName        String
+  lastName         String
+  imageUrl         String?
   resumeAnalysis   ResumeAnalysis? @relation(fields: [resumeAnalysisId], references: [id])
   resumeAnalysisId String?         @unique
 }
