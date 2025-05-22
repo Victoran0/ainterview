@@ -51,3 +51,6 @@ test.tsx
 
 # idea files
 .idea
+
+# generated prisma client
+generated/prisma/
