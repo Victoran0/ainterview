@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,50 +8,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id               String          @id @default(uuid())
-  emailAddress     String          @unique
-  firstName        String
-  lastName         String
-  imageUrl         String?
-  resumeAnalysis   ResumeAnalysis? @relation(fields: [resumeAnalysisId], references: [id])
-  resumeAnalysisId String?         @unique
-}
-
-model ResumeAnalysis {
-  id          String       @id @default(uuid())
-  summary     String
-  skills      String[] // Supported in PostgreSQL/MySQL 8+, otherwise use JSON/text
-  experiences Experience[] // Optional by default (empty if none)
-  education   Education[]
-  projects    Project[]
-  user        User?        @relation
-  createdAt   DateTime     @default(now())
+model Education {
+  id             String         @id @default(cuid())
+  degree         String
+  institution    String
+  graduationYear String?
+  resumeId       String
+  ResumeAnalysis ResumeAnalysis @relation(fields: [resumeId], references: [id])
 }
 
 model Experience {
-  id               String         @id @default(uuid())
+  id               String         @id @default(cuid())
   jobTitle         String
   company          String
   duration         String?
   responsibilities String[]
   resumeId         String
-  resume           ResumeAnalysis @relation(fields: [resumeId], references: [id])
-}
-
-model Education {
-  id             String         @id @default(uuid())
-  degree         String
-  institution    String
-  graduationYear String?
-  resumeId       String
-  resume         ResumeAnalysis @relation(fields: [resumeId], references: [id])
+  ResumeAnalysis   ResumeAnalysis @relation(fields: [resumeId], references: [id])
 }
 
 model Project {
-  id          String         @id @default(uuid())
-  name        String
-  description String
-  resumeId    String
-  resume      ResumeAnalysis @relation(fields: [resumeId], references: [id])
+  id             String         @id @default(cuid())
+  name           String
+  description    String
+  resumeId       String
+  ResumeAnalysis ResumeAnalysis @relation(fields: [resumeId], references: [id])
+}
+
+model ResumeAnalysis {
+  id         String       @id @default(cuid())
+  summary    String
+  skills     String[]
+  createdAt  DateTime     @default(now())
+  Education  Education[]
+  Experience Experience[]
+  Project    Project[]
+  User       User?
+}
+
+model User {
+  id               String          @id @default(cuid())
+  resumeAnalysisId String?         @unique
+  emailAddress     String          @unique
+  firstName        String
+  imageUrl         String?
+  lastName         String
+  ResumeAnalysis   ResumeAnalysis? @relation(fields: [resumeAnalysisId], references: [id])
+  Interviews       Interview[]
+}
+
+model Interview {
+  id                     String   @id @default(cuid())
+  userId                 String
+  User                   User     @relation(fields: [userId], references: [id])
+  overallScorePercentage Float // (0-100)
+  strengths              String[] // Key strengths demonstrated
+  weaknesses             String[] // Areas for improvement
+  studyPlanSummary       String // Study plan summary
+  createdAt              DateTime @default(now())
+
+  @@index([userId]) // Improves lookup speed for Interview → User queries
 }
