@@ -3,8 +3,6 @@ import { z } from 'zod';
 
 // Schema for resume analysis (used by LLM and frontend)
 export const ResumeAnalysisSchema = z.object({
-  fullName: z.string().optional().describe("Full name of the candidate"),
-  email: z.string().email().optional().describe("Email address"),
   summary: z.string().describe("A brief summary or objective from the resume."),
   skills: z.array(z.string()).describe("List of key skills (technical, soft skills, tools, programming languages, etc.)."),
   experiences: z.array(
@@ -30,6 +28,23 @@ export const ResumeAnalysisSchema = z.object({
   ).optional().describe("Personal or academic projects.")
 });
 export type ResumeAnalysis = z.infer<typeof ResumeAnalysisSchema>;
+
+// For the form, we might need IDs for list items
+export const ExperienceSchema = ResumeAnalysisSchema.shape.experiences.unwrap().element.extend({ localId: z.string() });
+export const EducationSchema = ResumeAnalysisSchema.shape.education.unwrap().element.extend({ localId: z.string() });
+export const ProjectSchema = ResumeAnalysisSchema.shape.projects.unwrap().element.extend({ localId: z.string() });
+
+export type FormExperience = z.infer<typeof ExperienceSchema>;
+export type FormEducation = z.infer<typeof EducationSchema>;
+export type FormProject = z.infer<typeof ProjectSchema>;
+
+export interface ManualResumeFormData {
+  summary: string;
+  skillsInput: string; // For comma-separated input
+  experiences: FormExperience[];
+  education: FormEducation[];
+  projects: FormProject[];
+}
 
 // Schemas for Questions and Interview Structure
 export const QuestionSchema = z.object({
