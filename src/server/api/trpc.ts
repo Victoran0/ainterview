@@ -26,9 +26,17 @@ import { auth } from "@clerk/nextjs/server";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const user = await auth()
+  const authData = await auth()
+  const userId = authData.userId;
+
+  const user = userId
+    ? await db.user.findUnique({
+        where: { id: userId },
+      })
+    : null;
+  
   return {
-    auth: user,
+    user: user,
     db,
     ...opts,
   };
@@ -102,13 +110,13 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 // Custom middleware for private procedure
 // We also have to get the user from auth
 const isAuthed = t.middleware(({next, ctx}) => {
-  if (!ctx.auth?.userId) {
+  if (!ctx.user?.id) {
     throw new Error("Unauthorized")
 
   } return next({
     ctx: {
       ...ctx,
-      auth: ctx.auth as Required<typeof ctx.auth>
+      user: ctx.user as Required<typeof ctx.user>
     }
   })
 })
