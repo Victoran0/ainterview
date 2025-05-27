@@ -5,6 +5,7 @@ import { JsonOutputParser } from "@langchain/core/output_parsers";
 import { InterviewSession, FullReportSchema, FullReport, Question } from '@/lib/types';
 import { NextRequest, NextResponse } from 'next/server';
 import zodToJsonSchema from "zod-to-json-schema";
+import { saveInterview } from "./saveInterview";
 // LangGraph imports would go here if used:
 // import { StateGraph, END } from "@langchain/langgraph";
 // import { RunnableLambda, RunnablePassthrough } from "@langchain/core/runnables";
@@ -119,8 +120,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
         });
         fullReport.sessionId = sessionData.sessionId;
 
+        const runSaveInterview = await saveInterview(fullReport);
+        if (!runSaveInterview) {
+            console.error('Failed to save interview in DB');
+            return NextResponse.json({ error: 'Failed to save interview in DB.' }, { status: 500 });
+        }
+        console.log('Interview created successfully in DB:', runSaveInterview);
 
-        // TODO: Store fullReport in DB
         return NextResponse.json(fullReport, { status: 200 });
 
     } catch (error: any) {
