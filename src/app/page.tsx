@@ -63,9 +63,7 @@ const bannerLayers = [
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10"> {/* z-10 for stacking */}
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
-          // animate={{ opacity: 1, y: 0 }} // Changed to animate for direct control
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
+          animate={{ opacity: 1, y: 0 }} // Changed to animate for direct control
           transition={{ duration: 0.8, delay: 0.2, type: 'spring', stiffness: 100 }}
           className="text-5xl md:text-7xl font-extrabold text-white mb-6"
           style={{ textShadow: '0 0 25px rgba(0,0,0,0.9)' }}
@@ -74,9 +72,7 @@ const bannerLayers = [
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 30 }}
-          // animate={{ opacity: 1, y: 0 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, type: 'spring', stiffness: 100 }}
           className="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl"
           style={{ textShadow: '0 0 15px rgba(0,0,0,0.8)' }}
@@ -85,9 +81,7 @@ const bannerLayers = [
         </motion.p>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
-          // animate={{ opacity: 1, scale: 1 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6, type: 'spring', stiffness: 120 }}
           whileHover={{ scale: 1.05 }}
         >
