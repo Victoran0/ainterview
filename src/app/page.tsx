@@ -82,10 +82,10 @@ const bannerLayers = [
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.6, type: 'spring', stiffness: 120 }}
+          transition={{ duration: 0.5, type: 'spring', stiffness: 120 }}
           whileHover={{ scale: 1.05 }}
         >
-          <Link href="/my-resume" passHref>
+          <Link href="/interview/new" passHref>
             <Button size="lg" className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-xl transform transition-transform duration-200 cursor-pointer">
               Get Started Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -182,7 +182,7 @@ export default function HomePage() {
                 >
                     Stop guessing what interviewers will ask. Start practicing with purpose.
                 </motion.p>
-                <Link href="/my-resume" passHref>
+                <Link href="/interview/new" passHref>
                     <Button size="lg" variant="default" className="text-lg px-10 py-7 rounded-full shadow-lg transform hover:scale-105 transition-transform">
                         Begin Your Transformation <ArrowRight className="ml-3 h-6 w-6" />
                     </Button>
