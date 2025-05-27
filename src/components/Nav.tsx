@@ -20,8 +20,14 @@ const Nav = () => {
                         AInterview
                     </Link>
                     <div className="space-x-4 flex items-center">
-                        <Link href="/get-started" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
-                        New Interview
+                        {/* <Link href="/interview/new" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
+                            New Interview
+                        </Link> */}
+                        <Link href="/interviews" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
+                            Interviews
+                        </Link>
+                        <Link href="/my-resume" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
+                            My Resume
                         </Link>
                         {/* Add other links: Dashboard, Profile, etc. */}
                         {isSignedIn ? (
@@ -30,8 +36,8 @@ const Nav = () => {
                             <UserButton />
                             </div>
                         ) : (
-                            <div className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
-                                <SignInButton />
+                            <div className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75 cursor-pointer'>
+                                <SignInButton />    
                             </div>
                         )}
                     </div>
