@@ -38,13 +38,116 @@ export type FormExperience = z.infer<typeof ExperienceSchema>;
 export type FormEducation = z.infer<typeof EducationSchema>;
 export type FormProject = z.infer<typeof ProjectSchema>;
 
-export interface ManualResumeFormData {
+// export interface ManualResumeFormData {
+//   summary: string;
+//   skillsInput: string; // For comma-separated input
+//   experiences: FormExperience[];
+//   education: FormEducation[];
+//   projects: FormProject[];
+// }
+
+// Experience
+// const BaseExperienceSchema = ResumeAnalysisSchema.shape.experiences.unwrap().element.extend({ id: z.string() });
+
+// // Education
+// const BaseEducationSchema = ResumeAnalysisSchema.shape.education.unwrap().element.extend({ id: z.string() });
+
+// // Project
+// const BaseProjectSchema = ResumeAnalysisSchema.shape.projects.unwrap().element.extend({ id: z.string() });
+
+// --- Type for the Manual Resume Form Data (Client-Side State) ---
+// This is what your EditResumeForm's state might look like.
+// export interface ResumeData {
+//   summary: string;
+//   skills: string[]; // For comma-separated input before converting to array
+//   Experience: z.infer<typeof BaseExperienceSchema>[];
+//   Education: z.infer<typeof BaseEducationSchema>[];  
+//   Project: z.infer<typeof BaseProjectSchema>[];  
+// }
+
+// export type ResumeFromDB = {
+//   id: string;
+//   summary: string;
+//   skills: string[];
+//   createdAt: string; // ISO date string
+//   updatedAt: string; // ISO date string
+//   Education: {
+//     id: string;
+//     degree: string;
+//     institution: string;
+//     graduationYear: string | null;
+//     resumeId: string;
+//   }[];
+//   Experience: {
+//     id: string;
+//     jobTitle: string;
+//     company: string;
+//     duration: string | null;
+//     responsibilities: string[];
+//     resumeId: string;
+//   }[];
+//   Project: {
+//     id: string;
+//     name: string;
+//     description: string;
+//     resumeId: string;
+//   }[];
+// };
+
+export type ResumeData = {
+  id?: string;
   summary: string;
-  skillsInput: string; // For comma-separated input
-  experiences: FormExperience[];
-  education: FormEducation[];
-  projects: FormProject[];
-}
+  skills: string[];
+  education: {
+    id?: string;
+    degree: string;
+    institution: string;
+    graduationYear: string | null;
+    resumeId?: string;
+  }[];
+  experiences: {
+    id?: string;
+    jobTitle: string;
+    company: string;
+    duration: string | null;
+    responsibilities: string[];
+    resumeId?: string;
+  }[];
+  projects: {
+    id?: string;
+    name: string;
+    description: string;
+    resumeId?: string;
+  }[];
+};
+
+export type ManualResumeFormData = {
+  id?: string;
+  summary: string;
+  skillsInput: string;
+  education: {
+    id: string;
+    degree: string;
+    institution: string;
+    graduationYear: string | null;
+    resumeId?: string;
+  }[];
+  experiences: {
+    id: string;
+    jobTitle: string;
+    company: string;
+    duration: string | null;
+    responsibilities: string[];
+    resumeId?: string;
+  }[];
+  projects: {
+    id: string;
+    name: string;
+    description: string;
+    resumeId?: string;
+  }[];
+};
+
 
 // Schemas for Questions and Interview Structure
 export const QuestionSchema = z.object({
@@ -113,3 +216,12 @@ export const FullReportSchema = z.object({
     sessionId: z.string()
 });
 export type FullReport = z.infer<typeof FullReportSchema>;
+
+export interface Interview {
+  id: string;
+  overallScorePercentage: number;
+  strengths: string[];
+  weaknesses: string[];
+  studyPlanSummary: string;
+  createdAt: Date;
+}
