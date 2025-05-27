@@ -10,6 +10,7 @@ import { ResumeAnalysisSchema, ResumeAnalysis } from '@/lib/types'; // Import yo
 import { NextRequest, NextResponse } from 'next/server';
 import next from 'next';
 import { createResumePath } from './createResumePath';
+import { saveResume } from './saveResume';
 
 export const config = { api: { bodyParser: false } }; // Disable default bodyParser
 
@@ -114,8 +115,6 @@ export async function POST(req: NextRequest) {
       if (!manualData) return NextResponse.json({ error: 'No manual data provided.' }, { status: 400 });
       // Convert manualData object to a text representation for the LLM
       resumeText = `Candidate provided data manually:
-        Full Name: ${manualData.fullName || 'N/A'}
-        Email: ${manualData.email || 'N/A'}
         Summary: ${manualData.summary}
         Skills: ${manualData.skills.join(', ')}
         Experiences: ${manualData.experiences?.map(e => `${e.jobTitle} at ${e.company}: ${e.responsibilities.join('. ')}`).join('\n')}
@@ -134,14 +133,18 @@ export async function POST(req: NextRequest) {
     const response = await llm.invoke(input);
     console.log('LLM response!: ', response.content);
 
-    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content);
-    
-    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content as any);
+
+    const runSaveResume = await saveResume(parsedAnalysis);
+    if (!runSaveResume) {
+      console.error('Failed to save resume in DB');
+      return NextResponse.json({ error: 'Failed to save resume.' }, { status: 500 });
+    }
     
     // In a real app, you'd save this analysis to a DB associated with sessionId
     // For now, we'll pass it to the next step or expect client to hold it.
     // Returning analysis and sessionId. Client should store analysis for /start-interview
-    return NextResponse.json({ analysis: parsedAnalysis, sessionId }, { status: 200 });
+    return NextResponse.json({ message: "Resume Processed and saved!" }, { status: 200 });
 
   } catch (error: any) {
     console.error('Resume processing error:', error);
