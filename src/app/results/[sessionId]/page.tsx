@@ -11,7 +11,7 @@ import { AlertCircle, CheckCircle, Lightbulb, ListChecks, Loader2, TrendingDown,
 import { z } from 'zod'; // Assuming fullReportSchema is defined with Zod as in the API
 import { OverallFeedback, AnswerEvaluation, FullReport, FullReportSchema } from '@/lib/types'; // Import your defined types
 import { motion } from "motion/react"
-import AnimatedCircularProgress from './animatedCircularProgress';
+import AnimatedCircularProgress from '../../../components/animatedCircularProgress';
 
 
 export default function ResultsPage() {
@@ -70,7 +70,7 @@ export default function ResultsPage() {
             <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
                 <AlertCircle className="h-12 w-12 text-destructive mb-4" />
                 <p className="text-xl text-destructive">{error || "Could not load interview report."}</p>
-                <Button onClick={() => router.push('/get-started')} className="mt-4">Start New Interview</Button>
+                <Button onClick={() => router.push('/my-resume')} className="mt-4">Start New Interview</Button>
             </div>
         );
     }
@@ -201,7 +201,7 @@ export default function ResultsPage() {
                         )}
                     </CardContent>
                     <CardFooter className="p-6 text-center">
-                        <Button onClick={() => router.push('/get-started')} size="lg">
+                        <Button onClick={() => router.push('/my-resume')} size="lg">
                             Start New Interview
                         </Button>
                     </CardFooter>
