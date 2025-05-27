@@ -6,6 +6,7 @@ import { JsonOutputParser } from "@langchain/core/output_parsers";
 import { ResumeAnalysis, InterviewStructureSchema, InterviewStructure, InterviewSession } from '@/lib/types';
 import { NextRequest, NextResponse } from 'next/server';
 import { zodToJsonSchema } from "zod-to-json-schema";
+import { api } from '@/trpc/server';
 
 const interviewJsonSchema = zodToJsonSchema(InterviewStructureSchema, "InterviewStructure");
 
@@ -29,7 +30,7 @@ Projects: {projects_highlights}
 For each question, specify its type (technical, behavioral, problem-solving, theoretical, aptitude-mcq, background), text, options (for MCQ), correctAnswerText (for MCQ, or ideal answer keywords for others), topic, and difficulty (easy, medium, hard).
 Structure the entire output as a single JSON object matching the InterviewStructureSchema provided by the tool call.
 Ensure questions are diverse and strongly aligned with the candidate's profile.
-Each section should have a name and a suggested time limit in minutes (e.g., Technical: 20 mins, Behavioral: 15 mins).
+Each section should have a name and a suggested time limit in minutes (e.g., Technical: 20 mins, Behavioral: 15 mins) and the total duration must not exceed 60 minutes.
 `;
 
 const llm = new ChatGoogleGenerativeAI({
@@ -58,16 +59,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   // const storedAnalysis = await req.json();
   // console.log('Received request to start interview:', storedAnalysis);
-  const { resumeAnalysis, sessionId }: { resumeAnalysis: ResumeAnalysis, sessionId: string } = await req.json();
-  console.log('Received request to start interview: \n\n', "resumeAnalysis: ", resumeAnalysis, "\n\nsessionId: ", sessionId);
+  const  resumeAnalysis: ResumeAnalysis = await api.manageDB.getResumeAnalysis();
+  console.log('Received request to start interview: \n\n', "resumeAnalysis: ", resumeAnalysis);
 
-  if (!resumeAnalysis || !sessionId) {
-    return new Response(JSON.stringify({ error: 'Resume analysis and sessionId are required.' }), {status: 400});
+  if (!resumeAnalysis) {
+    return new Response(JSON.stringify({ error: 'Resume analysis is required.' }), {status: 400});
   }
   
 
-//   const outputParser = new JsonOutputFunctionsParser(); // Parses the function call arguments
-const outputParser = new JsonOutputParser<InterviewStructure>(); // Parses the function call arguments
+  //   const outputParser = new JsonOutputFunctionsParser(); // Parses the function call arguments
+  const outputParser = new JsonOutputParser<InterviewStructure>(); // Parses the function call arguments
 
   try {
     const prompt = PromptTemplate.fromTemplate(questionGenerationPromptText);
@@ -82,7 +83,9 @@ const outputParser = new JsonOutputParser<InterviewStructure>(); // Parses the f
     const llmResponse = await toolCallingModel.invoke(input);
     console.log('LLM Response:', llmResponse.content);
     
-    const interviewStructure: InterviewStructure = await outputParser.invoke(llmResponse.content ); // Should be parsed JSON
+    const interviewStructure: InterviewStructure = await outputParser.invoke(llmResponse.content as any ); // Should be parsed JSON
+
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
 
     const interviewSession: InterviewSession = {
         sessionId,
