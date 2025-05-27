@@ -13,6 +13,8 @@ import {motion} from 'motion/react';
 import { InterviewSession, Question, InterviewSection, ResumeAnalysis } from '@/lib/types';
 import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import SectionTimer from './SectionTimer';
+import { api } from '@/trpc/react';
+import Link from 'next/link';
 
 
 export default function InterviewPage() {
@@ -30,16 +32,22 @@ export default function InterviewPage() {
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [currentQuestionInSectionIndex, setCurrentQuestionInSectionIndex] = useState(0);
 
+    const [interviewHasBeenDone, setInterviewHasBeenDone] = useState(false);
+
+    const { data: resumeData } = api.manageDB.checkResumeExists.useQuery();
+    const { data: interviewData } = api.manageDB.checkInterviewExists.useQuery({ interviewId: sessionId as string });
+
+
 
     // Fetch or initialize interview session
     useEffect(() => {
-        console.log("Session ID:", sessionId);
         if (sessionId === 'new') { // Start a new interview
-            const storedAnalysis = localStorage.getItem('resumeAnalysis');
-            console.log("Stored Analysis:", storedAnalysis);
-            if (!storedAnalysis) {
-                toast.error("Error", {description: "Resume analysis not found. Please start over."});
-                router.push('/get-started');
+            // const storedAnalysis = localStorage.getItem('resumeAnalysis');
+            // console.log("Stored Analysis:", storedAnalysis);
+            // const { data } = api.manageDB.checkResumeExists.useQuery();
+            if (!resumeData?.exists) {
+                toast.error("Error", {description: "Resume not found. Please add your resume."});
+                router.push('/my-resume');
                 return;
             }
             // const storedAnalysisJson: any = JSON.parse(storedAnalysis)
@@ -50,9 +58,7 @@ export default function InterviewPage() {
                 setIsLoading(true);
                 try {
                     const response = await fetch('/api/start-interview', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: storedAnalysis,
+                        method: 'POST'
                     });
                     if (!response.ok) {
                         const errData = await response.json();
@@ -73,7 +79,16 @@ export default function InterviewPage() {
             startInterview();
 
         } else if (typeof sessionId === 'string') { // Load existing session
-            const storedSession = localStorage.getItem(`interviewSession_${sessionId}`);
+            // const { data } = api.manageDB.checkInterviewExists.useQuery({ interviewId: sessionId });
+            console.log("Check interview exists:", interviewData);
+            let storedSession = localStorage.getItem(`interviewSession_${sessionId}`);
+            if (interviewData?.exists) {
+                if (storedSession) {
+                    localStorage.removeItem(`interviewSession_${sessionId}`);
+                    storedSession = null;
+                }
+            }
+
             if (storedSession) {
                 const session: InterviewSession = JSON.parse(storedSession);
                 setInterviewSession(session);
@@ -82,10 +97,10 @@ export default function InterviewPage() {
                 // Potentially fetch from backend if implementing server-side sessions
                 setError("Interview session not found or expired.");
                 toast.error("Error", {description: "Session not found. Please start over." });
-                router.push('/get-started');
+                router.push('/interview/new');
             }
         }
-    }, [sessionId, router]);
+    }, [sessionId, router, resumeData, interviewData]);
 
     // Update current section and question when interviewSession or its indices change
     useEffect(() => {
@@ -246,8 +261,12 @@ export default function InterviewPage() {
          return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
                 <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-                <p className="text-xl text-destructive">Error: {error}</p>
-                <Button onClick={() => router.push('/get-started')} className="mt-4">Start Over</Button>
+                interviewHasBeenDone ? (
+                    <p className="text-xl text-destructive">Interview has already been completed, <Link href={`/results/${interviewSession?.sessionId}`}>view results</Link></p>
+                ) : (
+                    <p className="text-xl text-destructive">Error: {error}</p>
+                )
+                <Button onClick={() => router.push('/my-resume')} className="mt-4">Start Over</Button>
             </div>
         );
     }
