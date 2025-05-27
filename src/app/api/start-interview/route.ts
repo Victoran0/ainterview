@@ -83,7 +83,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const llmResponse = await toolCallingModel.invoke(input);
     console.log('LLM Response:', llmResponse.content);
     
-    const interviewStructure: InterviewStructure = await outputParser.invoke(llmResponse.content as any ); // Should be parsed JSON
+    const interviewStructure: InterviewStructure = await outputParser.invoke(llmResponse.content ); // Should be parsed JSON
 
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
 

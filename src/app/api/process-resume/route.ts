@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
     const response = await llm.invoke(input);
     console.log('LLM response!: ', response.content);
 
-    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content as any);
+    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content);
 
     const runSaveResume = await saveResume(parsedAnalysis);
     if (!runSaveResume) {
