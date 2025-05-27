@@ -16,17 +16,17 @@ const Nav = () => {
                 className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm"
             >
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-                    <Link href="/" className="text-2xl font-bold text-primary hover:opacity-80 transition-opacity">
+                    <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-cyan-400 to-teal-400">
                         AInterview
                     </Link>
                     <div className="space-x-4 flex items-center">
                         {/* <Link href="/interview/new" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
                             New Interview
                         </Link> */}
-                        <Link href="/interviews" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
+                        <Link href="/interviews" className='text-sm font-medium hover:text-primary transition-colors duration-75 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500'>
                             Interviews
                         </Link>
-                        <Link href="/my-resume" className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-75'>
+                        <Link href="/my-resume" className='text-sm font-medium hover:text-primary transition-colors duration-75 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500'>
                             My Resume
                         </Link>
                         {/* Add other links: Dashboard, Profile, etc. */}
