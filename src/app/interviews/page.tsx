@@ -156,70 +156,83 @@ export default function PastInterviewsPage() {
         )}
 
         {!isLoading && !error && interviews && interviews.map((interview: Interview, index: number) => (
-          <motion.div key={interview.id} variants={itemVariants} whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.2)" }} transition={{type: "spring", stiffness: 300}}>
-            <Card className="bg-slate-800/50 border-slate-700 shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col h-full overflow-hidden">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl md:text-2xl font-semibold text-slate-100">
-                  Interview #{interviews.length - index}
-                </CardTitle>
-                <CardDescription className="text-sm text-slate-400">
-                  Completed on: {formatDate(interview.createdAt)}
-                </CardDescription>
-              </CardHeader>
-              <Separator className="bg-slate-700" />
-              <CardContent className="pt-6 grid md:grid-cols-3 gap-6 items-start flex-grow">
-                <div className="md:col-span-1 flex flex-col items-center justify-start">
-                  <AnimatedCircularProgress percentage={interview.overallScorePercentage} />
-                  <p className="mt-2 text-sm text-slate-400 font-medium">Overall Score</p>
+
+  <motion.div key={interview.id} variants={itemVariants} whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.2)" }} transition={{type: "spring", stiffness: 300}}>
+    <Card className="bg-slate-800/50 border-slate-700 shadow-lg hover:shadow-primary/20 transition-shadow duration-300 flex flex-col h-full overflow-hidden">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl md:text-2xl font-semibold text-slate-100">
+          Interview #{interviews.length - index}
+        </CardTitle>
+        <CardDescription className="text-sm text-slate-400">
+          Completed on: {formatDate(interview.createdAt)}
+        </CardDescription>
+      </CardHeader>
+      <Separator className="bg-slate-700" />
+      <CardContent className="pt-6 grid md:grid-cols-3 gap-6 items-start flex-grow">
+        <div className="md:col-span-1 flex flex-col items-center justify-start">
+          <AnimatedCircularProgress percentage={interview.overallScorePercentage} />
+          <p className="mt-2 text-sm text-slate-400 font-medium">Overall Score</p>
+        </div>
+        <div className="md:col-span-2 space-y-6"> {/* Increased space-y for better separation if badges wrap */}
+          <div>
+            <h4 className="text-md font-semibold text-green-400 mb-2 flex items-center">
+              <CheckCircle2 className="mr-2 h-5 w-5" /> Strengths
+            </h4>
+            {interview.strengths.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                {interview.strengths.map((strength, i) => (
+                    <Badge 
+                        key={i} 
+                        variant="outline" 
+                        className="bg-green-500/10 text-green-300 border-green-500/30 text-xs sm:text-sm 
+                                   whitespace-normal h-auto leading-normal py-1 px-2.5" // Added classes
+                    >
+                        {strength}
+                    </Badge>
+                ))}
                 </div>
-                <div className="md:col-span-2 space-y-4">
-                  <div>
-                    <h4 className="text-md font-semibold text-green-400 mb-2 flex items-center">
-                      <CheckCircle2 className="mr-2 h-5 w-5" /> Strengths
-                    </h4>
-                    {interview.strengths.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                        {interview.strengths.map((strength, i) => (
-                            <Badge key={i} variant="outline" className="bg-green-500/10 text-green-300 border-green-500/30 text-xs sm:text-sm">
-                            {strength}
-                            </Badge>
-                        ))}
-                        </div>
-                    ) : <p className="text-sm text-slate-500 italic">No specific strengths highlighted.</p>}
-                  </div>
-                  <div>
-                    <h4 className="text-md font-semibold text-yellow-400 mb-2 flex items-center">
-                      <AlertTriangle className="mr-2 h-5 w-5" /> Areas for Improvement
-                    </h4>
-                     {interview.weaknesses.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                        {interview.weaknesses.map((weakness, i) => (
-                            <Badge key={i} variant="outline" className="bg-yellow-500/10 text-yellow-300 border-yellow-500/30 text-xs sm:text-sm">
-                            {weakness}
-                            </Badge>
-                        ))}
-                        </div>
-                     ) : <p className="text-sm text-slate-500 italic">No specific weaknesses highlighted.</p>}
-                  </div>
+            ) : <p className="text-sm text-slate-500 italic">No specific strengths highlighted.</p>}
+          </div>
+          <div>
+            <h4 className="text-md font-semibold text-yellow-400 mb-2 flex items-center">
+              <AlertTriangle className="mr-2 h-5 w-5" /> Areas for Improvement
+            </h4>
+             {interview.weaknesses.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                {interview.weaknesses.map((weakness, i) => (
+                    <Badge 
+                        key={i} 
+                        variant="outline" 
+                        className="bg-yellow-500/10 text-yellow-300 border-yellow-500/30 text-xs sm:text-sm 
+                                   whitespace-normal h-auto leading-normal py-1 px-2.5" // Added classes
+                    >
+                        {weakness}
+                    </Badge>
+                ))}
                 </div>
-              </CardContent>
-              {interview.studyPlanSummary && (
-                <>
-                <Separator className="bg-slate-700 mt-auto"/>
-                <CardFooter className="pt-4 pb-6 bg-slate-800/30">
-                    <div>
-                        <h4 className="text-md font-semibold text-sky-400 mb-1 flex items-center">
-                            <Lightbulb className="mr-2 h-5 w-5" /> Study Plan
-                        </h4>
-                        <p className="text-sm text-slate-300 leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all duration-300">
-                            {interview.studyPlanSummary}
-                        </p>
-                    </div>
-                </CardFooter>
-                </>
-              )}
-            </Card>
-          </motion.div>
+             ) : <p className="text-sm text-slate-500 italic">No specific weaknesses highlighted.</p>}
+          </div>
+        </div>
+      </CardContent>
+      {interview.studyPlanSummary && (
+        <>
+        <Separator className="bg-slate-700 mt-auto"/>
+        <CardFooter className="pt-4 pb-6 bg-slate-800/30">
+            <div>
+                <h4 className="text-md font-semibold text-sky-400 mb-1 flex items-center">
+                    <Lightbulb className="mr-2 h-5 w-5" /> Study Plan
+                </h4>
+                {/* For the study plan, if it's long, you might want it to wrap too, 
+                    the line-clamp was for a hover effect. If you want it always wrapped: */}
+                <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap"> {/* Use whitespace-pre-wrap for newlines in summary */}
+                    {interview.studyPlanSummary}
+                </p>
+            </div>
+        </CardFooter>
+        </>
+      )}
+    </Card>
+  </motion.div>
         ))}
       </motion.div>
     </motion.div>
