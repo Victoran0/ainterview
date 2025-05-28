@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Education {
+  id             String         @id @default(cuid())
+  degree         String
+  institution    String
+  graduationYear String?
+  resumeId       String
+  ResumeAnalysis ResumeAnalysis @relation(fields: [resumeId], references: [id])
+}
+
+model Experience {
+  id               String         @id @default(cuid())
+  jobTitle         String
+  company          String
+  duration         String?
+  responsibilities String[]
+  resumeId         String
+  ResumeAnalysis   ResumeAnalysis @relation(fields: [resumeId], references: [id])
+}
+
+model Project {
+  id             String         @id @default(cuid())
+  name           String
+  description    String
+  resumeId       String
+  ResumeAnalysis ResumeAnalysis @relation(fields: [resumeId], references: [id])
+}
+
+model ResumeAnalysis {
+  id         String       @id @default(cuid())
+  summary    String
+  skills     String[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Education  Education[]
+  Experience Experience[]
+  Project    Project[]
+  User       User?
+}
+
+model User {
+  id               String          @id @default(cuid())
+  resumeAnalysisId String?         @unique
+  emailAddress     String          @unique
+  firstName        String
+  imageUrl         String?
+  lastName         String
+  ResumeAnalysis   ResumeAnalysis? @relation(fields: [resumeAnalysisId], references: [id])
+  Interviews       Interview[]
+}
+
+model Interview {
+  id                     String   @id @default(cuid())
+  userId                 String
+  User                   User     @relation(fields: [userId], references: [id])
+  overallScorePercentage Float // (0-100)
+  strengths              String[] // Key strengths demonstrated
+  weaknesses             String[] // Areas for improvement
+  studyPlanSummary       String // Study plan summary
+  createdAt              DateTime @default(now())
+
+  @@index([userId]) // Improves lookup speed for Interview → User queries
+}
