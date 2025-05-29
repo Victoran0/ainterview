@@ -54,7 +54,7 @@ export default function InterviewPage() {
         if (sessionId === 'new') {
             if (!resumeData?.exists && !resumeData?.isLoading) { // check isLoading to prevent premature redirect
                 toast.error("Resume Required", {description: "Please add your resume before starting an interview."});
-                router.push('/resume'); // Assuming /resume is the page to add/view resume
+                router.push('/my-resume'); // Assuming /resume is the page to add/view resume
                 return;
             }
             if(resumeData?.exists) { // Only start if resume exists
