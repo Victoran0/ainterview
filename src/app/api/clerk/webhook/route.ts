@@ -6,7 +6,7 @@ import { db } from "@/server/db"
 
 export const POST = async (req: Request) => {
     const {data, type} = await req.json()
-    // console.log('clerk webhook type: ', type)
+    console.log('clerk webhook type: ', type)
     console.log('clerk webhook data: ', data)
 
     if (type === "user.created") {
@@ -16,30 +16,6 @@ export const POST = async (req: Request) => {
         const lastName = data.last_name
         const imageUrl = data.image_url
         const id = data.id
-
-        // async function createUser() {
-        //     await db.user.create({
-        //         data: {
-        //             id: id,
-        //             emailAddress: emailAddress,
-        //             firstName: firstName,
-        //             lastName: lastName,
-        //             imageUrl: imageUrl
-        //         }
-        //     })
-        // }
-
-        // createUser()
-        // .then(async () => {
-        //     console.log("user created successfully")
-        //     // await db.$disconnect()
-        // })
-        // .catch(async (e) => {
-        //     console.error("The error: ",e)
-        //     // await db.$disconnect()
-        //     // console.log("error", e)
-        //     return new Response("User creation error", {status: 500})
-        // })
 
         try {
             await db.user.create({
@@ -66,29 +42,6 @@ export const POST = async (req: Request) => {
         const imageUrl = data.image_url
         const id = data.id
 
-        // async function updateUser() {
-        //     await db.user.update({
-        //         where: { id: id },
-        //         data: {
-        //             emailAddress: emailAddress,
-        //             firstName: firstName,
-        //             lastName: lastName,
-        //             imageUrl: imageUrl
-        //         }
-        //     })
-        // }
-
-        // updateUser()
-        // .then(async () => {
-        //     console.log("user updated successfully")
-        //     // await db.$disconnect()
-        // })
-        // .catch(async (e) => {
-        //     console.error("The error: ", e)
-        //     // await db.$disconnect()
-        //     // console.log("error", e)
-        //     return new Response("User update error", {status: 500})
-        // })
         try {
             await db.user.update({
                 where: { id: id },
@@ -109,24 +62,6 @@ export const POST = async (req: Request) => {
     if (type === "user.deleted") {
         console.log('user deleted webhook type? : ', type)
         const id = data.id
-
-        // async function deleteUser() {
-        //     await db.user.delete({
-        //         where: { id: id }
-        //     })
-        // }
-
-        // deleteUser()
-        // .then(async () => {
-        //     console.log("user deleted successfully")
-        //     // await db.$disconnect()
-        // })
-        // .catch(async (e) => {
-        //     console.error("The error: ",e)
-        //     // await db.$disconnect()
-        //     // console.log("error", e)
-        //     return new Response("User deletion error", {status: 500})
-        // })
 
         try {
             await db.user.delete({
