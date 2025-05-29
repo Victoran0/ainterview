@@ -1,7 +1,7 @@
-// import { db } from "@/server/db"
-import { PrismaClient } from '../../../../../generated/prisma/client'
+import { db } from "@/server/db"
+// import { PrismaClient } from '../../../../../generated/prisma/client'
 
-const prisma = new PrismaClient()
+// const prisma = new PrismaClient()
 
 
 export const POST = async (req: Request) => {
@@ -17,7 +17,7 @@ export const POST = async (req: Request) => {
         const id = data.id
 
         async function createUser() {
-            await prisma.user.create({
+            await db.user.create({
                 data: {
                     id: id,
                     emailAddress: emailAddress,
@@ -31,11 +31,11 @@ export const POST = async (req: Request) => {
         createUser()
         .then(async () => {
             console.log("user created successfully")
-            await prisma.$disconnect()
+            await db.$disconnect()
         })
         .catch(async (e) => {
             console.error("The error: ",e)
-            await prisma.$disconnect()
+            await db.$disconnect()
             // console.log("error", e)
             return new Response("User creation error", {status: 500})
         })
@@ -49,7 +49,7 @@ export const POST = async (req: Request) => {
         const id = data.id
 
         async function updateUser() {
-            await prisma.user.update({
+            await db.user.update({
                 where: { id: id },
                 data: {
                     emailAddress: emailAddress,
@@ -63,11 +63,11 @@ export const POST = async (req: Request) => {
         updateUser()
         .then(async () => {
             console.log("user updated successfully")
-            await prisma.$disconnect()
+            await db.$disconnect()
         })
         .catch(async (e) => {
             console.error("The error: ", e)
-            await prisma.$disconnect()
+            await db.$disconnect()
             // console.log("error", e)
             return new Response("User update error", {status: 500})
         })
@@ -77,7 +77,7 @@ export const POST = async (req: Request) => {
         const id = data.id
 
         async function deleteUser() {
-            await prisma.user.delete({
+            await db.user.delete({
                 where: { id: id }
             })
         }
@@ -85,11 +85,11 @@ export const POST = async (req: Request) => {
         deleteUser()
         .then(async () => {
             console.log("user deleted successfully")
-            await prisma.$disconnect()
+            await db.$disconnect()
         })
         .catch(async (e) => {
             console.error("The error: ",e)
-            await prisma.$disconnect()
+            await db.$disconnect()
             // console.log("error", e)
             return new Response("User deletion error", {status: 500})
         })
