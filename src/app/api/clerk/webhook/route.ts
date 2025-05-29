@@ -10,13 +10,38 @@ export const POST = async (req: Request) => {
     console.log('clerk webhook data: ', data)
 
     if (type === "user.created") {
+        console.log('user created webhook type? : ', type)
         const emailAddress = data.email_addresses[0].email_address
         const firstName = data.first_name
         const lastName = data.last_name
         const imageUrl = data.image_url
         const id = data.id
 
-        async function createUser() {
+        // async function createUser() {
+        //     await db.user.create({
+        //         data: {
+        //             id: id,
+        //             emailAddress: emailAddress,
+        //             firstName: firstName,
+        //             lastName: lastName,
+        //             imageUrl: imageUrl
+        //         }
+        //     })
+        // }
+
+        // createUser()
+        // .then(async () => {
+        //     console.log("user created successfully")
+        //     // await db.$disconnect()
+        // })
+        // .catch(async (e) => {
+        //     console.error("The error: ",e)
+        //     // await db.$disconnect()
+        //     // console.log("error", e)
+        //     return new Response("User creation error", {status: 500})
+        // })
+
+        try {
             await db.user.create({
                 data: {
                     id: id,
@@ -26,19 +51,11 @@ export const POST = async (req: Request) => {
                     imageUrl: imageUrl
                 }
             })
-        }
-
-        createUser()
-        .then(async () => {
             console.log("user created successfully")
-            // await db.$disconnect()
-        })
-        .catch(async (e) => {
-            console.error("The error: ",e)
-            // await db.$disconnect()
-            // console.log("error", e)
+        } catch (error) {
+            console.error("The error: ", error)
             return new Response("User creation error", {status: 500})
-        })
+        }
     }
 
     if (type === "user.updated") {
@@ -90,25 +107,37 @@ export const POST = async (req: Request) => {
     }
 
     if (type === "user.deleted") {
+        console.log('user deleted webhook type? : ', type)
         const id = data.id
 
-        async function deleteUser() {
+        // async function deleteUser() {
+        //     await db.user.delete({
+        //         where: { id: id }
+        //     })
+        // }
+
+        // deleteUser()
+        // .then(async () => {
+        //     console.log("user deleted successfully")
+        //     // await db.$disconnect()
+        // })
+        // .catch(async (e) => {
+        //     console.error("The error: ",e)
+        //     // await db.$disconnect()
+        //     // console.log("error", e)
+        //     return new Response("User deletion error", {status: 500})
+        // })
+
+        try {
             await db.user.delete({
                 where: { id: id }
             })
-        }
-
-        deleteUser()
-        .then(async () => {
             console.log("user deleted successfully")
-            // await db.$disconnect()
-        })
-        .catch(async (e) => {
-            console.error("The error: ",e)
-            // await db.$disconnect()
-            // console.log("error", e)
+        } catch (error) {
+            console.error("The error: ", error)
             return new Response("User deletion error", {status: 500})
-        })
+            
+        }
     }
 
     return new Response("Webhook received", {status: 200})
