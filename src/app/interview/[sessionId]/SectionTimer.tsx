@@ -21,7 +21,7 @@ const SectionTimer = ({ durationMinutes, onTimeUp }: { durationMinutes: number, 
     const seconds = timeLeft % 60;
 
     return (
-        <div className={`text-lg font-semibold p-2 rounded-md flex items-center ${timeLeft < 60 ? 'text-red-500 animate-pulse' : 'text-foreground'}`}>
+        <div className={`text-lg font-semibold p-2 rounded-md flex items-center ${timeLeft < 60 ? 'text-red-500 animate-pulse' : ' text-slate-300'}`}>
             <TimerIcon className="mr-2 h-5 w-5" />
             Time Left: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
         </div>
