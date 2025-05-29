@@ -266,7 +266,7 @@ export default function InterviewPage() {
                     className="w-full max-w-3xl" // Can adjust max-width
                 >
                     <Card className="bg-slate-800/70 border-slate-700 shadow-2xl backdrop-blur-md overflow-hidden">
-                        <CardHeader className="p-6 border-b border-slate-700">
+                        <CardHeader className="p-6 pt-1 border-b border-slate-700">
                             <div className="flex justify-between items-start mb-3">
                                 <div className="flex items-center">
                                     <SectionIcon className={`mr-3 h-8 w-8 ${sectionColor}`} />
@@ -281,12 +281,10 @@ export default function InterviewPage() {
                                 </div>
                                 {currentSection.timeLimitMinutes > 0 && (
                                     <div className="flex items-center text-sm bg-slate-700/50 px-3 py-1.5 rounded-lg text-slate-300">
-                                        <Timer className="mr-2 h-4 w-4 text-slate-400" />
                                         <SectionTimer 
                                             key={`${sessionId}-${currentSection.name}`} // Re-mount timer on section change
                                             durationMinutes={currentSection.timeLimitMinutes} 
                                             onTimeUp={handleTimeUp} 
-                                            className="font-mono"
                                         />
                                     </div>
                                 )}
@@ -337,7 +335,7 @@ export default function InterviewPage() {
                                             value={currentAnswer as string}
                                             onChange={(e) => setCurrentAnswer(e.target.value)}
                                             placeholder="Type your answer here..."
-                                            rows={10} // Increased rows
+                                            rows={8} // Increased rows
                                             className="text-base bg-slate-700/50 border-slate-600 text-slate-100 focus:border-primary placeholder-slate-400 flex-grow resize-none"
                                         />
                                     )}
@@ -345,7 +343,7 @@ export default function InterviewPage() {
                             </AnimatePresence>
                         </CardContent>
 
-                        <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 p-6 border-t border-slate-700">
+                        <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 p-6 pb-1 border-t border-slate-700">
                             <Button 
                                 variant="outline" 
                                 onClick={handlePreviousQuestion} 
