@@ -52,7 +52,7 @@ export default function InterviewPage() {
 
     useEffect(() => {
         if (sessionId === 'new') {
-            if (!resumeData?.exists && !resumeData?.isLoading) { // check isLoading to prevent premature redirect
+            if (!resumeData?.exists) { // check isLoading to prevent premature redirect
                 toast.error("Resume Required", {description: "Please add your resume before starting an interview."});
                 router.push('/my-resume'); // Assuming /resume is the page to add/view resume
                 return;
@@ -97,12 +97,13 @@ export default function InterviewPage() {
                 const session: InterviewSession = JSON.parse(storedSession);
                 setInterviewSession(session);
                 setIsLoading(false);
-            } else if (!interviewData?.isLoading) { // Only if not loading and no stored session
-                setError("Interview session not found or has expired.");
-                toast.error("Session Error", {description: "Session not found. Please start a new interview." });
-                // router.push('/interview/new'); // Or to a dashboard
-                setIsLoading(false);
-            }
+            } 
+            // else if (!interviewData?.isLoading) { // Only if not loading and no stored session
+            //     setError("Interview session not found or has expired.");
+            //     toast.error("Session Error", {description: "Session not found. Please start a new interview." });
+            //     // router.push('/interview/new'); // Or to a dashboard
+            //     setIsLoading(false);
+            // }
         }
     }, [sessionId, router, resumeData, interviewData]);
 
