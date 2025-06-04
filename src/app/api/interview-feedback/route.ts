@@ -1,6 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { PromptTemplate } from "@langchain/core/prompts";
-import { JsonOutputFunctionsParser } from "langchain/output_parsers";
+import { JsonOutputFunctionsParser, StructuredOutputParser } from "langchain/output_parsers";
 import { JsonOutputParser } from "@langchain/core/output_parsers";
 import { InterviewSession, FullReportSchema, FullReport, Question } from '@/lib/types';
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,33 +10,48 @@ import { saveInterview } from "./saveInterview";
 // import { StateGraph, END } from "@langchain/langgraph";
 // import { RunnableLambda, RunnablePassthrough } from "@langchain/core/runnables";
 
-const FullReportJsonSchema = zodToJsonSchema(FullReportSchema, "FullReport");
+// const FullReportJsonSchema = zodToJsonSchema(FullReportSchema, "FullReport");
+const fullReportParser = StructuredOutputParser.fromZodSchema(FullReportSchema);
 
-const feedbackPromptText = `
-You are an AI Interview Performance Analyzer.
-You will receive the candidate's resume analysis, the interview questions, and their answers.
-Your task is to:
-1.  Evaluate each answer individually:
-    - Provide a score from 0 to 5 (0=poor, 5=excellent).
-    - Give specific, constructive feedback on the answer.
-    - For MCQs, state if it was correct and score accordingly (5 for correct, 0 for incorrect).
-    - Consider the question type, keywords (if provided with the question), and ideal answer concepts.
-2.  Provide overall feedback:
-    - Calculate an overall score percentage.
-    - List key strengths demonstrated.
-    - List key weaknesses or areas for improvement.
-    - Offer detailed improvement suggestions for each weakness, including potential learning resources (provide placeholder names/URLs if actual ones are unknown).
-    - Write a concise study plan summary.
 
-Candidate Resume Summary: {resume_summary}
-Candidate Skills: {resume_skills}
+const feedbackPromptTemplate = new PromptTemplate({
+    template: `You are an AI Interview Performance Analyzer.
+    You will receive the candidate's resume analysis, the interview questions, and their answers.
+    Your task is to:
+    1.  Evaluate each answer individually:
+        - Provide a score from 0 to 5 (0=poor, 5=excellent).
+        - Give specific, constructive feedback on the answer.
+        - For MCQs, state if it was correct and score accordingly (5 for correct, 0 for incorrect).
+        - Consider the question type, keywords (if provided with the question), and ideal answer concepts.
+    2.  Provide overall feedback:
+        - Calculate an overall score percentage.
+        - List key strengths demonstrated.
+        - List key weaknesses or areas for improvement.
+        - Offer detailed improvement suggestions for each weakness, including potential learning resources (provide placeholder names/URLs if actual ones are unknown).
+        - Write a concise study plan summary.
 
-Interview Questions & Answers:
-{questions_and_answers_formatted_string}
+    Candidate Resume Summary: {resume_summary}
+    Candidate Skills: {resume_skills}
 
-Please structure your entire response as a single JSON object matching the FullReportSchema.
-Be fair, constructive, and thorough.
-`;
+    Interview Questions & Answers:
+    {questions_and_answers_formatted_string}
+
+    Be fair, constructive, and thorough.
+    
+    Format your output strictly according to the schema provided in Output Instructions.
+        Your response must be a valid JSON object, starting and ending with curly braces.
+        Do not wrap the JSON in triple backticks or any markdown formatting.
+        Do not include any keys or fields that are not explicitly defined in the output instructions.
+        All values must conform to the types and structures defined in the output instructions.
+        The output must be parseable by a strict JSON parser.
+
+    OUTPUT INSTRUCTIONS:
+    {output_instructions}
+    `,
+    inputVariables: ["resume_summary", "resume_skills", "questions_and_answers_formatted_string"],
+    partialVariables: { output_instructions: fullReportParser.getFormatInstructions() }
+
+})
 
 // Helper to format Q&A for the prompt
 function formatQuestionsAndAnswers(session: InterviewSession): string {
@@ -65,19 +80,19 @@ const llm = new ChatGoogleGenerativeAI({
     model: "gemini-2.0-flash", 
 });
 
-const functionCallingModel = llm.bind({
-    tools: [
-        {   
-            type: "function",
-            function: {
-                name: "generate_interview_full_report",
-                description: "Generates a complete interview feedback report including individual answer evaluations and overall feedback.",
-                parameters: FullReportJsonSchema.definitions?.FullReport || FullReportJsonSchema,
-            },
-        },
-    ],
-    tool_choice: { type: "function", function: { name: "generate_interview_full_report" }},
-});
+// const functionCallingModel = llm.bind({
+//     tools: [
+//         {   
+//             type: "function",
+//             function: {
+//                 name: "generate_interview_full_report",
+//                 description: "Generates a complete interview feedback report including individual answer evaluations and overall feedback.",
+//                 parameters: FullReportJsonSchema.definitions?.FullReport || FullReportJsonSchema,
+//             },
+//         },
+//     ],
+//     tool_choice: { type: "function", function: { name: "generate_interview_full_report" }},
+// });
 
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -93,14 +108,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     try {
         const questions_and_answers_formatted_string = formatQuestionsAndAnswers(sessionData);
-        const prompt = PromptTemplate.fromTemplate(feedbackPromptText);
-        const input = await prompt.format({
+        // const prompt = PromptTemplate.fromTemplate(feedbackPromptText);
+        const input = await feedbackPromptTemplate.format({
             resume_summary: sessionData.resumeAnalysis.summary,
             resume_skills: sessionData.resumeAnalysis.skills.join(', '),
             questions_and_answers_formatted_string,
         });
 
-        const llmResponse = await functionCallingModel.invoke(input);
+        const llmResponse = await llm.invoke(input);
         console.log('LLM response:', llmResponse);
 
         let fullReport: FullReport = await outputParser.invoke(llmResponse.content as string);
