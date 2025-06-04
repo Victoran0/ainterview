@@ -49,8 +49,12 @@ export default function ResultsPage() {
                 } catch (e) {
                     console.error("JSON parsing error on stored results:", e);
                     setError("Failed to load feedback data.");
+                } finally {
+                    setIsLoading(false);
+                    setTimeout(() => {
+                        localStorage.removeItem(`interviewResults_${sessionId}`); // Clear after loading
+                    }, 3000);
                 }
-                setIsLoading(false);
             } else {
                 setError("Interview results not found. The session may have expired or was not completed.");
                 setIsLoading(false);
