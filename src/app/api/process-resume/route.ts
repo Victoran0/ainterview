@@ -49,9 +49,8 @@ async function getTextFromDoc(filePath: string, fileType: string): Promise<strin
 }
 
 const llm = new ChatGoogleGenerativeAI({
-  // openAIApiKey: process.env.OPENAI_API_KEY,
   temperature: 0.1, // Low temperature for factual extraction
-  model: "gemini-2.0-flash", // Or "gpt-4-turbo-preview" for better results
+  model: "gemini-2.5-flash-preview-05-20",
 });
 
 const allowedMimeTypes = [
@@ -133,7 +132,7 @@ export async function POST(req: NextRequest) {
     const response = await llm.invoke(input);
     console.log('LLM response!: ', response.content);
 
-    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content);
+    const parsedAnalysis: ResumeAnalysis = await resumeParser.invoke(response.content as string);
 
     const runSaveResume = await saveResume(parsedAnalysis);
     if (!runSaveResume) {
