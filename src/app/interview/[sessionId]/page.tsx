@@ -51,6 +51,7 @@ export default function InterviewPage() {
     );
 
     useEffect(() => {
+        if (isLoadingResume || isLoadingInterview) return;
         if (sessionId === 'new') {
             if (!resumeData?.exists && !isLoadingResume) { // check isLoading to prevent premature redirect
                 toast.error("Resume Required", {description: "Please add your resume before starting an interview."});
@@ -79,7 +80,7 @@ export default function InterviewPage() {
                 };
                 startInterview();
             }
-        } else if (typeof sessionId === 'string') {
+        } else if (typeof sessionId === 'string' && sessionId !== 'new') {
             let storedSession = localStorage.getItem(`interviewSession_${sessionId}`);
             if (interviewData?.exists) { // If interview is marked as done in DB
                 if (storedSession) {
@@ -104,7 +105,7 @@ export default function InterviewPage() {
                 setIsLoading(false);
             }
         }
-    }, [sessionId, router, resumeData, interviewData]);
+    }, [resumeData, interviewData]);
 
     useEffect(() => {
         if (interviewSession) {
