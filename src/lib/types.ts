@@ -193,7 +193,7 @@ export const AnswerEvaluationSchema = z.object({
     answerProvided: z.string(),
     score: z.number().min(0).max(5).describe("Score for the answer (0-5)"),
     feedback: z.string().describe("Specific feedback for this answer."),
-    isCorrect: z.boolean().optional().describe("For MCQs, was it correct?"),
+    isCorrect: z.boolean().optional().describe("For MCQs ONLY, was it correct?. This must not be used for non-MCQ questions."),
 });
 export type AnswerEvaluation = z.infer<typeof AnswerEvaluationSchema>;
 
