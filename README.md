@@ -1,8 +1,8 @@
-# AInterviewer: Your Personal AI-Powered Interview Coach
+# AInterview: Your Personal AI-Powered Interview Coach
 
 ## 1. Executive Summary
 
-**AInterviewer** is a cutting-edge, web-based platform built with **Next.js**, **TypeScript**, **Langchain.js**, and the latest **Google Gemini 2.5 model**, designed to revolutionize how job candidates prepare for interviews. It acts as a personalized, intelligent AI interviewer that:
+**AInterview** is a cutting-edge, web-based platform built with **Next.js T3 Stack**, **Langchain.js**, and the latest **Google Gemini 2.5 model**, designed to revolutionize how job candidates prepare for interviews. It acts as a personalized, intelligent AI interviewer that:
 
 - Analyzes a user's resume
 - Generates tailored interview questions (technical, behavioral, problem-solving, aptitude)
@@ -28,7 +28,7 @@ Job interviews pose significant challenges for candidates:
 
 ## 3. Solution Overview
 
-**AInterviewer** tackles these challenges through an AI-driven coaching experience:
+**AInterview** tackles these challenges through an AI-driven coaching experience:
 
 - **Personalized Preparation**: AI analyzes the candidate's resume to understand their profile.
 - **Tailored Question Generation**: Langchain.js generates role-specific questions.
@@ -107,6 +107,7 @@ Job interviews pose significant challenges for candidates:
 ## 6. Technology Stack
 
 - **Frontend**: Next.js (React), TypeScript
+- **Backend**: Next.js API routes, trpc
 - **Styling**: Tailwind CSS, Shadcn/UI
 - **Animations**: Framer Motion, React Scroll Parallax
 - **AI Integration**:
@@ -161,14 +162,14 @@ Job interviews pose significant challenges for candidates:
 
 ## 10. Unique Selling Proposition (USP)
 
-**AInterviewer** offers a highly personalized and intelligent coaching experience, combining:
+**AInterview** offers a highly personalized and intelligent coaching experience, combining:
 
 - Resume-driven question generation
 - Deep, actionable feedback
 - Personalized study plans
 - Premium user experience
 
-Unlike generic practice tools, AInterviewer strives to deliver a **top-tier AI coach**, replicating the adaptability and insight of a human expert using the latest in **LLM** and **agentic AI** technologies.
+Unlike generic practice tools, AInterview strives to deliver a **top-tier AI coach**, replicating the adaptability and insight of a human expert using the latest in **LLM** and **agentic AI** technologies.
 
 ---
 
